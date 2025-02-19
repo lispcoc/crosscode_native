@@ -1,19 +1,19 @@
 const sdl = require('@kmamal/sdl')
 const fs = require('fs')
-const c = require('canvas')
+const {Image, createCanvas} = require('@napi-rs/canvas')
 const ls = require('./localStorage')
 const { JSDOM } = require('jsdom');
 const jsdom = new JSDOM();
 const DOMParser = jsdom.window.DOMParser
-const nodeFileEvalSync = require('node-file-eval');
 
 localStorage = ls.instance
 
-const createCanvas = c.createCanvas
+const WIDTH = 568
+const HEIGHT = 320
 
 // Setup
-var window = sdl.video.createWindow({ title: "Canvas", width: 568, height: 320 })
-const { pixelWidth: width, pixelHeight: height } = window
+var gameWindow = sdl.video.createWindow({ title: "Canvas", width: WIDTH, height: HEIGHT })
+const { pixelWidth: width, pixelHeight: height } = gameWindow
 const canvas = createCanvas(width, height)
 const ctx = canvas.getContext('2d')
 
@@ -22,20 +22,6 @@ var navigator  = {
   msMaxTouchPoints: "",
   appVersion: ""
 }
-
-window.navigator = navigator
-window.screen = {
-  availWidth: 640,
-}
-window.sc = {}
-var sc = window.sc
-
-window.addEventListener =(a,b,c)=>{
-  console.log("window.addEventListener",a,b,c)
-}
-window.IG_ROOT = ""
-
-var Vec3
 
 class HTMLElement{
   constructor(){
@@ -54,6 +40,16 @@ class HTMLElement{
 }
 class HTMLScript{
   constructor(){}
+}
+class XMLHttpRequest{
+  constructor(){}
+  open(type, file, flag) {}
+  send() {
+    if(this.onload){
+      this.response = []//buffer
+      this.onload()
+    }
+  }
 }
 
 var head = new HTMLElement()
@@ -88,7 +84,7 @@ class Document{
   }
   createElement (a) {
     if (a == "canvas") {
-      return createCanvas(256, 256)
+      return createCanvas(1024, 1024)
     }
     if (a == "script") {
       return new HTMLScript()
@@ -96,18 +92,118 @@ class Document{
   }
 }
 
-canvas.width = width
-canvas.height = height
-canvas.style = {width: String(width), height:String(height)}
-
-var document = new Document()
-
-var ig
-
-removeEventListener = (id, f, c ) => {
+class fakeJquery{
+  ajax(obj){
+    fs.readFile("" + obj.url, (err, data) => {
+      obj.success.bind(obj.context)(JSON.parse(String(data)))
+    })
+  }
 }
 
+class Audio{
+  constructor(path){
+    this.path = path
+    this.duration = 1
+    this.paused = false
+    this.ended = false
+  }
+  pause(){
+    this.paused = true
+  }
+  play(){
+    this.paused = false
+    return this
+  }
+  canPlayType(t){
+    //console.log("canPlayType", t)
+    return true
+  }
+  addEventListener(id, f, c) {
+    if(id == "canplaythrough") {
+      let r =new AudioContext()
+      f(r)
+    }
+  }
+  removeEventListener(id, f, c ){
+  }
+  load(){
+    //console.log("load")
+  }
+}
 
+class AudioGain{
+  constructor(){
+    //console.log("Audio")
+    this.gain = {
+
+    }
+  }
+  connect(a) {
+  }
+  disconnect(a){
+  }
+}
+class AudioBufferNode{
+  constructor(){
+    this.playbackRate = {}
+  }
+  connect(gain){}
+  noteOn(a, b){}
+}
+class AudioContext{
+  constructor(){
+    //console.log("Audio")
+  }
+  getCurrentTimeRaw() {
+    return 0
+  }
+  createGain(a = null) {
+    return new AudioGain()
+  }
+  decodeAudioData(buffer, f_ok, f_err){
+    f_ok({buffer: buffer, duration: 2})
+  }
+  createBufferSource(){
+    return new AudioBufferNode()
+  }
+  createPanner(){
+    return new AudioPanner()
+  }
+}
+
+class AudioPanner{
+  setPosition(){}
+  connect(a) {
+  }
+  disconnect(a){
+  }
+}
+
+$ = (a) => {
+  return {
+    width: (a) => {
+      console.log("width", a);
+      return 568
+    },
+    height: (a) => {
+      console.log("height", a);
+      return 320
+    },
+    css: (a) => {}
+  }
+}
+$.ajax = (obj) => {
+  fs.readFile("" + obj.url, (err, data) => {
+    if(obj.url.match("php")){
+      obj.success([])  
+    } else if(!err || obj.url == "NO_PATCH"){
+      obj.success.bind(obj.context)(JSON.parse(String(data)))  
+    } else {
+      obj.error()
+    }
+  })
+}
+Math.seedrandomSeed = (seed)=>{}
 
 
 
@@ -145,142 +241,32 @@ d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j
 
 
 
-nodeFileEvalSync("js/game.compiled.js")
+canvas.width = WIDTH
+canvas.height = HEIGHT
+canvas.style = {width: String(width), height:String(height)}
 
-nodeFileEvalSync("../test2.js")
+var document = new Document()
 
-// end
+removeEventListener = (id, f, c ) => {
+}
 
+window = globalThis
+window.navigator = navigator
+window.screen = {
+  availWidth: WIDTH,
+}
+window.sc = {}
+window.addEventListener =(a,b,c)=>{
+  console.log("window.addEventListener",a,b,c)
+}
+window.Vec3
+window.IG_ROOT = ""
 KEY_SPLINES = window.KEY_SPLINES
-
 assert = window.assert
 assertContent = window.assertContent
-
-class fakeJquery{
-  ajax(obj){
-    fs.readFile("" + obj.url, (err, data) => {
-      console.log(obj.url);
-      obj.success(JSON.parse(String(data)))
-    })
-  }
-}
-
-class Audio{
-  constructor(path){
-    //console.log("Audio")
-    this.path = path
-    this.duration = 1
-    this.paused = false
-    this.ended = false
-  }
-  pause(){
-    this.paused = true
-  }
-  play(){
-    this.paused = false
-  }
-  canPlayType(t){
-    //console.log("canPlayType", t)
-    return true
-  }
-  addEventListener(id, f, c) {
-    if(id == "canplaythrough") {
-      let r =new AudioContext()
-      f(r)
-    }
-  }
-  removeEventListener(id, f, c ){
-
-  }
-  load(){
-    //console.log("load")
-  }
-}
-
-//Image = c.Image
-class Image extends c.Image{
-  constructor(){
-    super()
-  }
-}
-
-class Image2{
-  //this.data = new Image()
-  //this.data.onload = this.onload.bind(this)
-  //this.data.onerror = this.onerror.bind(this)
-  //this.data.src = ig.getFilePath(
-  //  ig.root + this.path + ig.getCacheSuffix()
-  //)
-  constractor(){
-    this.data = []
-  }
-  get src(){
-    return this._src
-  }
-  set src(path){
-    this._src = path
-    console.log(path);
-    fs.readFile("" + path, (err, data) => {
-      console.log(path);
-      this.onload(data)
-    })
-  }
-}
-
-class AudioGain{
-  constructor(){
-    //console.log("Audio")
-    this.gain = {
-
-    }
-  }
-  connect() {
-    return 0
-  }
-}
-class AudioContext{
-  constructor(){
-    //console.log("Audio")
-  }
-  getCurrentTimeRaw() {
-    return 0
-  }
-  createGain(a = null) {
-    return new AudioGain()
-  }
-}
-
-window.Audio = Audio
-window.AudioContext = AudioContext
-window.CryptoJS = CryptoJS
-$ = (a) => {
-  console.log(a);
-  return {
-    width: () => {
-      return 568
-    },
-    height: () => {
-      return 320
-    }
-  }
-}
-$.ajax = (obj) => {
-  fs.readFile("" + obj.url, (err, data) => {
-    if(obj.url.match("php")){
-      obj.success([])  
-    } else if(!err || obj.url == "NO_PATCH"){
-      obj.success(JSON.parse(String(data)))  
-    } else {
-      console.log(obj.url);
-      obj.error()
-    }
-  })
-}
-
-
 window.IG_GAME_SCALE = 1;
 window.IG_GAME_CACHE = "";
-window.IG_ROOT = "";
+window.IG_ROOT = "assets/";
 window.IG_WIDTH = 568;
 window.IG_HEIGHT = 320;
 window.IG_HIDE_DEBUG = false;
@@ -288,8 +274,6 @@ window.IG_SCREEN_MODE_OVERRIDE = 2;
 window.IG_WEB_AUDIO_BGM = false;
 window.IG_FORCE_HTML5_AUDIO = false;
 window.LOAD_LEVEL_ON_GAME_START = null;
-
-canvas.width = 640
-canvas.height = 480
-
-var ig
+window.Audio = Audio
+window.AudioContext = AudioContext
+window.CryptoJS = CryptoJS
