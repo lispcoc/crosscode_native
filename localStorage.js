@@ -23,7 +23,7 @@ class LocalStorage {
             return file
         }
         this.data[name] = file
-        if( name == "cc.save"){
+        if( name == "cc.save" || "IG_LANG"){
             return JSON.parse(this.data[name])
         }
         return this.data[name]
