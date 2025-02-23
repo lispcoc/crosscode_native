@@ -1,12 +1,13 @@
 const sdl = require('@kmamal/sdl')
 const fs = require('fs')
-const {Image, createCanvas} = require('@napi-rs/canvas')
+const {Image, createCanvas, GlobalFonts} = require('@napi-rs/canvas')
 const ls = require('./localStorage')
 const { JSDOM } = require('jsdom');
 const jsdom = new JSDOM();
 const DOMParser = jsdom.window.DOMParser
 
 localStorage = ls.instance
+GlobalFonts.registerFromPath('./JF-Dot-MPlus12.ttf', 'CrossCodeJP')
 
 const WIDTH = 568
 const HEIGHT = 320
@@ -184,11 +185,11 @@ $ = (a) => {
   return {
     width: (a) => {
       console.log("width", a);
-      return 568
+      return WIDTH
     },
     height: (a) => {
       console.log("height", a);
-      return 320
+      return HEIGHT
     },
     css: (a) => {}
   }
@@ -268,8 +269,8 @@ assertContent = window.assertContent
 window.IG_GAME_SCALE = 1;
 window.IG_GAME_CACHE = "";
 window.IG_ROOT = "assets/";
-window.IG_WIDTH = 568;
-window.IG_HEIGHT = 320;
+window.IG_WIDTH = WIDTH;
+window.IG_HEIGHT = HEIGHT;
 window.IG_HIDE_DEBUG = false;
 window.IG_SCREEN_MODE_OVERRIDE = 2;
 window.IG_WEB_AUDIO_BGM = false;
