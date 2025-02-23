@@ -8,18 +8,25 @@ class LocalStorage {
         if(this.data[name]) {
             return this.data[name]
         }
-        var file
+        var file = null
         try {
             file = fs.readFileSync("save/" + name)
         } catch (e) {
             console.log("file not found", name)
-            if( name = "cc.save"){
-                return { "name":"", "slots": [], "globals":{} }
+            if( name == "cc.save"){
+                file = '{ "name":"", "slots": [], "globals":{} }'
+            } else if( name == "IG_LANG") {
+                file = ""
+            } else {
+                file = null
             }
-        return {}
+            return file
         }
         this.data[name] = file
-        return JSON.parse(this.data[name])
+        if( name == "cc.save"){
+            return JSON.parse(this.data[name])
+        }
+        return this.data[name]
     }
     setItem(name, a) {
         this.data[name] = JSON.stringify(a)
