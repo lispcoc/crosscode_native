@@ -5,20 +5,38 @@ document.listener[0].f()
 class Controller {
   constructor(instance){
     this.SDLinstance = instance
-    this.instance = new ig.Gamepad()
-    this.buttonPressed = []
+    this.buttons = []
+    this.axes = []
+    this.buttonDown = []
+    this.buttonUp = []
+    this.buttonStates = []
     this.axesStates = []
     for(var i = 0; i < 20; i++) {
-      this.buttonPressed.push(false)
+      this.buttons.push(0)
+      this.axes.push(0)
+      this.buttonDown.push(false)
+      this.buttonUp.push(false)
+      this.buttonStates.push(0)
       this.axesStates.push({})
     }
   }
   update(a){
-    for (var i in this.buttonPressed) {
-      a = this.instance.pressedStates[i] = this.buttonPressed[i]
+    console.log(JSON.stringify(a))
+    a = a[0]
+    for (var i in this.buttonDown) {
+      if(this.buttonDown[i]) {
+        a.updateButton(i, 1)
+      }
+      this.buttonDown[i] = false
+    }
+    for (var i in this.buttonUp) {
+      if(this.buttonUp[i]) {
+        a.updateButton(i, 0)
+      }
+      this.buttonUp[i] = false
     }
     for (var i in this.axesStates) {
-      a = this.instance.axesStates[i] = this.axesStates[i]
+      a.updateAxes(i, this.axesStates[i])
     }
   }
   /*
@@ -42,8 +60,8 @@ const controllerMap = {
   'back': 8,
   'start': 9,
   'start': 9,
-  'leftStick': 10,
-  'rightStick': 11,
+  'leftStick': 6,
+  'rightStick': 7,
   'dpadUp': 12,
   'dpadDown' : 13,
   'dpadLeft': 14,
@@ -59,20 +77,27 @@ const instances = new Set()
 const openController = (device) => {
   const instance = sdl.controller.openDevice(device)
   instances.add(instance)
-  ig.gamepad.handlers[0] = new Controller(instance)
-  ig.gamepad.gamepads[0] = ig.gamepad.handlers[0].instance
+
+  gamepad = new Controller(instance)
+  //ig.gamepad.handlers[0] = new ControllerHandler(instance)
+  //ig.gamepad.gamepads[0] = ig.gamepad.handlers[0].instance
+  navigator.getGamepads = () => {
+    return [gamepad]
+  }
   instance.on('*', (eventType, event) => {
+    const button = controllerMap[event.button]
+    const axis = controllerMap[event.axis]
     if (eventType === 'close') {
       instances.delete(instance)
     }
     if (eventType === 'buttonDown') {
-      ig.gamepad.handlers[0].buttonPressed[controllerMap[event.button]] = true
+      gamepad.buttons[button] = 1
     }
     if (eventType === 'buttonUp') {
-      ig.gamepad.handlers[0].buttonPressed[controllerMap[event.button]] = false
+      gamepad.buttons[button] = 0
     }
     if (eventType === 'axisMotion') {
-      ig.gamepad.handlers[0].axesStates[controllerMap[event.axis]] = event.value
+      gamepad.axes[axis] = event.value
     }
   })
 }

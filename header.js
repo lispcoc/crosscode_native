@@ -20,7 +20,8 @@ const ctx = canvas.getContext('2d')
 var navigator  = {
   userAgent: "Linux",
   msMaxTouchPoints: "",
-  appVersion: ""
+  appVersion: "",
+  getGamepads: null
 }
 
 class HTMLElement{
