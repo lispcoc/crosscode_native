@@ -7,7 +7,7 @@ const jsdom = new JSDOM();
 const DOMParser = jsdom.window.DOMParser
 
 localStorage = ls.instance
-GlobalFonts.registerFromPath('./JF-Dot-MPlus12.ttf', 'CrossCodeJP')
+GlobalFonts.registerFromPath('./ipaexg.ttf', 'CrossCodeJP')
 
 const WIDTH = 568
 const HEIGHT = 320
