@@ -104,6 +104,11 @@ const openController = (device) => {
 
 var gamepadinit = false
 var intervalID = setInterval(() => {
+  if(!isRequestAnimationFrame) {
+    return
+  }
+  isRequestAnimationFrame = false
+  requestAnimationFrameCallback()
   if(!gamepadinit && ig.gamepad) {
     sdl.controller.on('deviceAdd', (event) => {
       openController(event.device)
@@ -115,7 +120,7 @@ var intervalID = setInterval(() => {
   }
   const buffer = ig.system.canvas.data()
   gameWindow.render(ig.system.width, ig.system.height, ig.system.width * 4, 'rgba32', buffer)
-}, 33);
+}, 16);
 
 console.log(
   window.IG_WIDTH,

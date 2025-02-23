@@ -279,3 +279,10 @@ window.LOAD_LEVEL_ON_GAME_START = null;
 window.Audio = Audio
 window.AudioContext = AudioContext
 window.CryptoJS = CryptoJS
+
+var requestAnimationFrameCallback = null
+var isRequestAnimationFrame = false
+window.requestAnimationFrame = (f) => {
+  requestAnimationFrameCallback = f
+  isRequestAnimationFrame = true
+}
