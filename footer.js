@@ -104,11 +104,6 @@ const openController = (device) => {
 
 var gamepadinit = false
 var intervalID = setInterval(() => {
-  if(!isRequestAnimationFrame) {
-    return
-  }
-  isRequestAnimationFrame = false
-  requestAnimationFrameCallback()
   if(!gamepadinit && ig.gamepad) {
     sdl.controller.on('deviceAdd', (event) => {
       openController(event.device)

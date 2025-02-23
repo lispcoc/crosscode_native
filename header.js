@@ -22,7 +22,8 @@ var navigator  = {
   userAgent: "Linux",
   msMaxTouchPoints: "",
   appVersion: "",
-  getGamepads: null
+  getGamepads: null,
+  language: "ja_JP"
 }
 
 class HTMLElement{
@@ -280,9 +281,3 @@ window.Audio = Audio
 window.AudioContext = AudioContext
 window.CryptoJS = CryptoJS
 
-var requestAnimationFrameCallback = null
-var isRequestAnimationFrame = false
-window.requestAnimationFrame = (f) => {
-  requestAnimationFrameCallback = f
-  isRequestAnimationFrame = true
-}
