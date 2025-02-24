@@ -1,5 +1,6 @@
 const WIDTH = 568
 const HEIGHT = 320
+const use_fakeAudio = false
 
 const fs = require('fs')
 const { JSDOM } = require('jsdom')
@@ -11,6 +12,7 @@ const {
   FakeAudioContext,
   FakeAudioPanner
 } = require('./fakeAudio.js')
+const {AudioContext} = require('node-web-audio-api')
 
 globalThis.IG_GAME_SCALE = 1
 globalThis.IG_GAME_CACHE = ''
@@ -90,14 +92,18 @@ class HTMLElement {
   }
 }
 
-class MyAudioContext extends globalThis.AudioContext {
+class MyAudioContext extends AudioContext {
   decodeAudioData (arrayBuffer, successCallback, errorCallback) {
     try {
+      if (arrayBuffer instanceof Buffer) {
+        arrayBuffer = arrayBuffer.buffer
+      }
       super.decodeAudioData.bind(this)(arrayBuffer, successCallback, () => {})
     } catch (e) {
       console.log(e)
     }
   }
+  /*
   createPanner () {
     var r = undefined
     if (super.createPanner) {
@@ -123,6 +129,7 @@ class MyAudioContext extends globalThis.AudioContext {
     }
     return r
   }
+    */
 }
 
 const jsdom = new JSDOM()
@@ -132,11 +139,13 @@ globalThis.CryptoJS = CryptoJS
 globalThis.HTMLElement = HTMLElement
 globalThis.AudioContext = MyAudioContext
 
-globalThis.Audio = FakeAudio
-globalThis.AudioGain = FakeAudioGain
-globalThis.AudioBufferNode = FakeAudioBufferNode
-globalThis.AudioContext = FakeAudioContext
-globalThis.AudioPanner = FakeAudioPanner
+if (use_fakeAudio) {
+  globalThis.Audio = FakeAudio
+  globalThis.AudioGain = FakeAudioGain
+  globalThis.AudioBufferNode = FakeAudioBufferNode
+  globalThis.AudioContext = FakeAudioContext
+  globalThis.AudioPanner = FakeAudioPanner
+}
 
 require('./public/assets/js/game.compiled.js')
 
