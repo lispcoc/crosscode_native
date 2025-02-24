@@ -1,0 +1,21 @@
+{
+  "name": "mygame",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "http-server ."
+  },
+  "main": "game.cjs",
+  "keywords": [
+    
+  ],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "jquery": "^3.7.1",
+    "jsdom": "^26.0.0"
+  }
+}

@@ -2,8 +2,8 @@ const WIDTH = 568
 const HEIGHT = 320
 
 const fs = require('fs')
-const { CryptoJS } = require("./assets/impact/page/js/aes.js")
-const seedrandom = require("./assets/impact/page/js/seedrandom.js")
+const CryptoJS = require("./public/assets/impact/page/js/aes.js")
+const seedrandom = require("./public/assets/impact/page/js/seedrandom.js")
 const { JSDOM } = require('jsdom')
 
 globalThis.IG_GAME_SCALE = 1;
@@ -144,6 +144,6 @@ globalThis.AudioContext = MyAudioContext
 
 process.on
 
-require("./assets/js/game.compiled.js")
+require("./public/assets/js/game.compiled.js")
 
 window.startCrossCode()
