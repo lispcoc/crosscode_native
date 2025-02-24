@@ -11,7 +11,6 @@ const {
   FakeAudioContext,
   FakeAudioPanner
 } = require('./fakeAudio.js')
-const seedrandom = require('./public/assets/impact/page/js/seedrandom.js')
 
 globalThis.IG_GAME_SCALE = 1
 globalThis.IG_GAME_CACHE = ''
@@ -128,7 +127,7 @@ class MyAudioContext extends globalThis.AudioContext {
 
 const jsdom = new JSDOM()
 globalThis.DOMParser = jsdom.window.DOMParser
-globalThis.Math.seedrandomSeed = seedrandom
+globalThis.Math.seedrandomSeed = (seed)=>{}
 globalThis.CryptoJS = CryptoJS
 globalThis.HTMLElement = HTMLElement
 globalThis.AudioContext = MyAudioContext
