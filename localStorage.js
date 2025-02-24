@@ -34,6 +34,6 @@ class LocalStorage {
     }
 }
 
-instance = new LocalStorage()
+var localStorage = new LocalStorage()
 
-module.exports = { instance }
+module.exports = { localStorage }
