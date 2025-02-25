@@ -132,11 +132,18 @@ class MyAudioContext extends AudioContext {
     */
 }
 
+class MyWorker extends globalThis.Worker {
+  constructor(file) {
+    super("file:///userdata/roms/jsgames/crosscode/public/" + file)
+  }
+}
+
 const jsdom = new JSDOM()
 globalThis.DOMParser = jsdom.window.DOMParser
 globalThis.Math.seedrandomSeed = (seed)=>{}
 globalThis.CryptoJS = CryptoJS
 globalThis.HTMLElement = HTMLElement
+globalThis.Worker = MyWorker
 globalThis.AudioContext = MyAudioContext
 
 if (use_fakeAudio) {
