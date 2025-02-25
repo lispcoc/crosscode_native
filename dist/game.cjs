@@ -24,7 +24,7 @@ globalThis.IG_SCREEN_MODE_OVERRIDE = 2
 globalThis.IG_WEB_AUDIO_BGM = false
 globalThis.IG_FORCE_HTML5_AUDIO = false
 globalThis.LOAD_LEVEL_ON_GAME_START = null
-globalThis.navigator.language = 'en_US'
+globalThis.navigator.appVersion = 'N/A'
 globalThis.name = ''
 
 const canvas = document.getElementById('gameCanvas')
