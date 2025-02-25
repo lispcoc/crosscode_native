@@ -93,6 +93,9 @@ class HTMLElement {
 }
 
 class MyAudioContext extends AudioContext {
+  constructor(){
+    super({ latencyHint: 'balanced', sampleRate: 22000 })
+  }
   decodeAudioData (arrayBuffer, successCallback, errorCallback) {
     try {
       if (arrayBuffer instanceof Buffer) {
@@ -103,33 +106,6 @@ class MyAudioContext extends AudioContext {
       console.log(e)
     }
   }
-  /*
-  createPanner () {
-    var r = undefined
-    if (super.createPanner) {
-      r = super.createPanner()
-    }
-    if (r == undefined) {
-      return new FakeAudioPanner()
-    }
-    return r
-  }
-  createGain () {
-    var r = super.createGain()
-    if (!r) {
-      return new FakeAudioGain()
-    }
-    const f = r.connect
-    r.connect = a => {
-      try {
-        f.bind(r)(a)
-      } catch (e) {
-        //console.log(e)
-      }
-    }
-    return r
-  }
-    */
 }
 
 class MyWorker extends globalThis.Worker {
